@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PipeSpawner : MonoBehaviour
 {
+    public GameObject _thePipe;
     public float generateRate = 1.0f;
     [SerializeField]
     private float timer = 0;
@@ -23,7 +24,6 @@ public class PipeSpawner : MonoBehaviour
         {
             GameObject newPipe = Instantiate(Pipe);
             newPipe.transform.position = transform.position + new Vector3(0, Random.Range(-Height, Height), 0);
-            Destroy(newPipe, 10);
             timer = 0;
             generateRate = Random.Range(1.6f, 3.2f);
         }
