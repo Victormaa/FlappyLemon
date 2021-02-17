@@ -12,6 +12,10 @@ public class Winds : MonoBehaviour
 
     private bool HardwareisConnected = false;
 
+    public AudioSource WindSounds;
+
+    public GameObject StillWind;
+
     UnityAction WindOnAction;
     UnityAction WindOffAction;
     // Start is called before the first frame update
@@ -38,8 +42,14 @@ public class Winds : MonoBehaviour
             Debug.Log("No PinMode Setup");
         }
 
-        WindOnAction += delegate { ArduinoFanControl(true); };
-        WindOffAction += delegate { ArduinoFanControl(false); };
+        WindOnAction += delegate {
+            ArduinoFanControl(true);
+            WindOn();
+        };
+        WindOffAction += delegate {
+            ArduinoFanControl(false);
+            WindOff();
+        };
         GameManager.Instance.onPlayingNormalEvent.AddListener(WindOffAction);
         GameManager.Instance.onPlayingWindOnEvent.AddListener(WindOnAction);
     }
@@ -59,15 +69,20 @@ public class Winds : MonoBehaviour
 
         if (GameManager.Instance.isPlaying)
         {
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (toggle)
                 {
-                    GameManager.Instance.SwitchInGameState("Normal");
+                    //warning tag
+
+                    //GameManager.Instance.SwitchInGameState("Normal");
                 }
                 else
                 {
-                    GameManager.Instance.SwitchInGameState("WindOn");
+                    //cancel warning tag
+
+                   //GameManager.Instance.SwitchInGameState("WindOn");
                 }
                 toggle = !toggle;
             }
@@ -81,11 +96,57 @@ public class Winds : MonoBehaviour
             if (windOn)
             {
                 UduinoManager.Instance.digitalWrite(9, State.HIGH);
+                StillWind.SetActive(!windOn);
             }
             else
             {
                 UduinoManager.Instance.digitalWrite(9, State.LOW);
+                StillWind.SetActive(!windOn);
             }
         }
+        else
+        {
+            if (windOn)
+            {
+                StillWind.SetActive(!windOn);
+            }
+            else
+            {
+                StillWind.SetActive(!windOn);
+            }
+        }
+    }
+
+    private void WindOn()
+    {
+        //happens when winds on
+        WindOnSounds();
+    }
+
+    private void WindOff()
+    {
+        //happens when winds on
+        WindOffSounds();
+        WindOffSign();
+    }
+
+    private void WindOnSounds()
+    {
+        WindSounds.Play();
+    }
+
+    private void WindOffSounds()
+    {
+        WindSounds.Stop();
+    }
+
+    private void WindOnSign()
+    {
+        GameManager.Instance.WarningSign.SetActive(true);
+    }
+
+    private void WindOffSign()
+    {
+        GameManager.Instance.WarningSign.SetActive(false);
     }
 }

@@ -15,15 +15,23 @@ public class Falling : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Lemon.position.y < -6.0f)
+        if (Lemon.position.y < -3.7f)
         {
-            Lemon.position = new Vector3(Lemon.position.x, 8.0f, Lemon.position.z);
+            if(GameManager.Instance.isPlaying)
+                GameManager.Instance.SwitchState("End");
+
+            //Lemon.position = new Vector3(Lemon.position.x, 8.0f, Lemon.position.z);
+            Lemon.GetComponent<Rigidbody2D>().gravityScale = 0;
             Lemon.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
 
-        if (Lemon.position.y > 8.0f)
+        if (Lemon.position.y > 10.7f)
         {
-            Lemon.position = new Vector3(Lemon.position.x, -6.0f, Lemon.position.z);
+            if (GameManager.Instance.isPlaying)
+                GameManager.Instance.SwitchState("End");
+
+            //Lemon.position = new Vector3(Lemon.position.x, 8.0f, Lemon.position.z);
+            Lemon.GetComponent<Rigidbody2D>().gravityScale = 0;
             Lemon.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
     }

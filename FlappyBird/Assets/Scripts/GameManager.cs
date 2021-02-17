@@ -5,12 +5,14 @@ using UnityEngine.UI;
 using Uduino;
 using System;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Test_Temp")]
     public Text gameState_display;
     public GameObject Menu_display;
+    public GameObject ThanksForTest;
 
     #region Singleton for GameManager
     private static GameManager _instance = null;
@@ -55,6 +57,10 @@ public class GameManager : MonoBehaviour
     //"Normal", "WindOn"
     public string InGameState = "Normal";
 
+    public GameObject WarningSign;
+    public Text game_Score_text;
+    public int game_Score = 0;
+
     #region Event on Different State
     [HideInInspector]
     public UnityEvent onMenuEvent = new UnityEvent();
@@ -81,17 +87,37 @@ public class GameManager : MonoBehaviour
     public UnityEvent offPauseEvent = new UnityEvent();
     [HideInInspector]
     public UnityEvent offEndEvent = new UnityEvent();
-    #endregion
 
     public bool isPlaying = false;
 
     public bool isMenu = true;
 
     public bool isPause = false;
+    #endregion
+
+    [Header("Game Design")]
+    public int[] _windOnPoint;
+    public int[] _windOffPoint;
+
+    private Queue<int> WindOnPoint = new Queue<int>();
+    private Queue<int> WindOffPoint = new Queue<int>();
+
 
     public void InitialGame()
     {
-        SwitchState("Menu");
+        game_Score = 0;
+        game_Score_text.text = 0.ToString();
+
+        //set up Wind on/off point
+        foreach (int a in _windOnPoint)
+        {
+            WindOnPoint.Enqueue(a);
+        }
+
+        foreach (int a in _windOffPoint)
+        {
+            WindOffPoint.Enqueue(a);
+        }
     }
 
     private void Awake()
@@ -109,11 +135,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
         switch (GameState)
         {
             case "Menu":
                 break;
             case "Playing":
+                if(game_Score == 10)
+                {
+                    SwitchState("End");
+                    //Thanks for test
+                    ThanksForTest.SetActive(true);
+                }
+                    
                 if (Input.GetKeyDown(KeyCode.P))
                 {
                     SwitchState("Pause");
@@ -121,12 +156,28 @@ public class GameManager : MonoBehaviour
                 switch (InGameState)
                 {
                     case "Normal":
+                        if (game_Score == WindOnPoint.Peek() - 1)
+                        {
+                            WarningSign.SetActive(true);
+                        }
+                            
+                        if (game_Score == WindOnPoint.Peek())
+                        {
+                            WindOnPoint.Dequeue();
+                            SwitchInGameState("WindOn");
+                        }
                         break;
                     case "WindOn":
+                        if (game_Score == WindOffPoint.Peek())
+                        {
+                            WindOffPoint.Dequeue();
+                            SwitchInGameState("Normal");
+                        }
                         break;
                     default:
                         break;
                 }
+                game_Score_text.text = game_Score.ToString();
                 break;
             case "Pause":
                 if (Input.GetKeyDown(KeyCode.P))
@@ -135,6 +186,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case "End":
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    SwitchState("ForEndoff");
+                    SceneManager.LoadScene(0);
+                }
                 break;
             default:
                 break;
@@ -153,12 +209,15 @@ public class GameManager : MonoBehaviour
                 isMenu = false;
                 break;
             case "Playing":
+                offPlayingEvent.Invoke();
                 isPlaying = false;
                 break;
             case "Pause":
+                offPauseEvent.Invoke();
                 isPause = false;
                 break;
             case "End":
+                offEndEvent.Invoke();
                 break;
             default:
                 break;
@@ -185,6 +244,7 @@ public class GameManager : MonoBehaviour
                 isPause = true;
                 break;
             case "End":
+                onEndEvent.Invoke();
                 StateCheck("End");
                 break;
             default:
@@ -222,9 +282,11 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
     private void onMenu()
     {
         Menu_display.SetActive(true);
+        InitialGame();
     }
 
     private void offMenu()
@@ -239,7 +301,6 @@ public class GameManager : MonoBehaviour
 
     public void ArduinoSetOnNoDevice()
     {
-
         UduinoManager.Instance.autoReconnect = false;
     }
 }
