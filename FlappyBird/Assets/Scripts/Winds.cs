@@ -18,9 +18,12 @@ public class Winds : MonoBehaviour
 
     UnityAction WindOnAction;
     UnityAction WindOffAction;
+
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
+        
+        yield return new WaitForSeconds(0.5f);
         if (UduinoManager.Instance.isConnected())
         {
             HardwareisConnected = true;
@@ -33,7 +36,8 @@ public class Winds : MonoBehaviour
 
         if (HardwareisConnected)
         {
-            UduinoManager.Instance.pinMode(9, PinMode.Output);
+            UduinoManager.Instance.ReadingMethod = HardwareReading.Coroutines;
+            UduinoManager.Instance.pinMode(11, PinMode.Output);
             Debug.Log("OutPut Set Up");
         }
         else
@@ -95,12 +99,12 @@ public class Winds : MonoBehaviour
         {
             if (windOn)
             {
-                UduinoManager.Instance.digitalWrite(9, State.HIGH);
+                UduinoManager.Instance.digitalWrite(11, State.HIGH);
                 StillWind.SetActive(!windOn);
             }
             else
             {
-                UduinoManager.Instance.digitalWrite(9, State.LOW);
+                UduinoManager.Instance.digitalWrite(11, State.LOW);
                 StillWind.SetActive(!windOn);
             }
         }
@@ -117,11 +121,9 @@ public class Winds : MonoBehaviour
         }
     }
 
-    private void WindOn()
-    {
+    private void WindOn() =>
         //happens when winds on
         WindOnSounds();
-    }
 
     private void WindOff()
     {
@@ -130,23 +132,11 @@ public class Winds : MonoBehaviour
         WindOffSign();
     }
 
-    private void WindOnSounds()
-    {
-        WindSounds.Play();
-    }
+    private void WindOnSounds() => WindSounds.Play();
 
-    private void WindOffSounds()
-    {
-        WindSounds.Stop();
-    }
+    private void WindOffSounds() => WindSounds.Stop();
 
-    private void WindOnSign()
-    {
-        GameManager.Instance.WarningSign.SetActive(true);
-    }
+    private void WindOnSign() => GameManager.Instance.WarningSign.SetActive(true);
 
-    private void WindOffSign()
-    {
-        GameManager.Instance.WarningSign.SetActive(false);
-    }
+    private void WindOffSign() => GameManager.Instance.WarningSign.SetActive(false);
 }

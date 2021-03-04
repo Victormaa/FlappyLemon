@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PipeSpawner : MonoBehaviour
@@ -7,7 +7,12 @@ public class PipeSpawner : MonoBehaviour
     public float generateRate = 1.0f;
     [SerializeField]
     private float timer = 0;
+
+    [SerializeField] private List<GameObject> _Pipe;
+    int GameLevel = 0;
+    bool checklevel = false;
     public GameObject Pipe;
+
     public float Height;
 
     private int Pipe_sum = 0;
@@ -22,11 +27,21 @@ public class PipeSpawner : MonoBehaviour
     void Update()
     {
         if (Pipe_sum == 3)
-            generateRate = 4.3f;
+            generateRate = 4.6f;
 
+        if ((Pipe_sum == 3 || Pipe_sum == 9) && checklevel)
+        {
+            GameLevel += 1;
+            checklevel = false;
+        }
+            
         if (timer > generateRate)
         {
-            GameObject newPipe = Instantiate(Pipe);
+            if (!_Pipe[GameLevel])
+                GameLevel = 0;
+
+            checklevel = true;
+            GameObject newPipe = Instantiate(_Pipe[GameLevel]);
             newPipe.transform.position = transform.position + new Vector3(0, Random.Range(-Height, Height), 0);
             timer = 0;
             Pipe_sum += 1;

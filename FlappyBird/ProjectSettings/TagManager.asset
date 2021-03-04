@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pipe
   - Point
+  - PlayerInfoPanel
   layers:
   - Default
   - TransparentFX

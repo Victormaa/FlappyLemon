@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Uduino;
-using System;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -52,11 +50,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Genera")]
     //"Menu", "Playing", "Pause", "End"
-    public string GameState = "Menu";
+    public string GameState = "PlayerInfo";
 
     //"Normal", "WindOn"
     public string InGameState = "Normal";
 
+    public GameObject RestartButton;
     public GameObject WarningSign;
     public Text game_Score_text;
     public int game_Score = 0;
@@ -77,6 +76,9 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public UnityEvent offMenuEvent = new UnityEvent();
+
+    public delegate void offMenuEventHandler();
+    public static event offMenuEventHandler _offMenuEvent_O;
     [HideInInspector]
     public UnityEvent offPlayingEvent = new UnityEvent();
          [HideInInspector]
@@ -90,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     public bool isPlaying = false;
 
-    public bool isMenu = true;
+    public bool isMenu = false;
 
     public bool isPause = false;
     #endregion
@@ -101,6 +103,11 @@ public class GameManager : MonoBehaviour
 
     private Queue<int> WindOnPoint = new Queue<int>();
     private Queue<int> WindOffPoint = new Queue<int>();
+
+    [Header("Data Collecting")]
+    public float Time_In_Total = 0;
+    public PlayerData playerData;
+    public JsonConverter jsonConverter;
 
 
     public void InitialGame()
@@ -118,12 +125,12 @@ public class GameManager : MonoBehaviour
         {
             WindOffPoint.Enqueue(a);
         }
+
+        playerData = FindObjectOfType<PlayerData>();
+        jsonConverter = FindObjectOfType<JsonConverter>();
     }
 
-    private void Awake()
-    {
-        InitialGame();
-    }
+    private void Awake() => InitialGame();
 
     // Start is called before the first frame update
     void Start()
@@ -186,11 +193,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case "End":
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    SwitchState("ForEndoff");
-                    SceneManager.LoadScene(0);
-                }
+                //if (Input.GetKeyDown(KeyCode.R))
+                //{
+                //    SwitchState("ForEndoff");
+                //    SceneManager.LoadScene(0);
+                //}
                 break;
             default:
                 break;
@@ -205,19 +212,20 @@ public class GameManager : MonoBehaviour
         switch (GameState)
         {
             case "Menu":
-                offMenuEvent.Invoke();
+                offMenuEvent?.Invoke();
+                _offMenuEvent_O?.Invoke();
                 isMenu = false;
                 break;
             case "Playing":
-                offPlayingEvent.Invoke();
+                offPlayingEvent?.Invoke();
                 isPlaying = false;
                 break;
             case "Pause":
-                offPauseEvent.Invoke();
+                offPauseEvent?.Invoke();
                 isPause = false;
                 break;
             case "End":
-                offEndEvent.Invoke();
+                offEndEvent?.Invoke();
                 break;
             default:
                 break;
@@ -229,22 +237,28 @@ public class GameManager : MonoBehaviour
         switch (GameState)
         {
             case "Menu":
-                onMenuEvent.Invoke();
+                onMenuEvent?.Invoke();
                 StateCheck("Menu");
                 isMenu = true;
                 break;
             case "Playing":
                 StateCheck("Playing");
-                onPlayingEvent.Invoke();
+                onPlayingEvent?.Invoke();
                 isPlaying = true;
                 break;
             case "Pause":
                 StateCheck("Pause");
-                onPauseEvent.Invoke();
+                onPauseEvent?.Invoke();
                 isPause = true;
                 break;
             case "End":
-                onEndEvent.Invoke();
+                onEndEvent?.Invoke();
+                RestartButton.SetActive(true);
+                WarningSign.SetActive(false);
+
+                playerData.EndGameDataCollect();
+                jsonConverter.collect();
+
                 StateCheck("End");
                 break;
             default:
@@ -260,10 +274,10 @@ public class GameManager : MonoBehaviour
         switch (InGameState)
         {
             case "Normal":
-                offPlayingNormalEvent.Invoke();
+                offPlayingNormalEvent?.Invoke();
                 break;
             case "WindOn":
-                offPlayingWindOnEvent.Invoke();
+                offPlayingWindOnEvent?.Invoke();
                 break;
             default:
                 break;
@@ -273,10 +287,10 @@ public class GameManager : MonoBehaviour
         switch (InGameState)
         {
             case "Normal":
-                onPlayingNormalEvent.Invoke();
+                onPlayingNormalEvent?.Invoke();
                 break;
             case "WindOn":
-                onPlayingWindOnEvent.Invoke();
+                onPlayingWindOnEvent?.Invoke();
                 break;
             default:
                 break;
@@ -294,13 +308,13 @@ public class GameManager : MonoBehaviour
         Menu_display.SetActive(false);
     }
 
-    private void StateCheck(string State)
-    {
-        gameState_display.text = "Game State: " + State;
-    }
+    private void StateCheck(string State) => gameState_display.text = "Game State: " + State;
 
-    public void ArduinoSetOnNoDevice()
+    public void ArduinoSetOnNoDevice() => UduinoManager.Instance.autoReconnect = false;
+
+    public void RestartScene()
     {
-        UduinoManager.Instance.autoReconnect = false;
+        SwitchState("ForEndoff");
+        SceneManager.LoadScene(0);
     }
 }

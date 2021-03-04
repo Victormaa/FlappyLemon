@@ -69,6 +69,7 @@ public class RoleControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 GameManager.Instance.SwitchState("Playing");
+                Physics2D.gravity = OriginalGravity;
                 LemonRIG.velocity = Vector2.zero;
                 LemonRIG.AddForce(Vector2.up * 4.0f, ForceMode2D.Impulse);
             }
@@ -111,10 +112,9 @@ public class RoleControl : MonoBehaviour
         LemonRIG.velocity = Vector2.zero;
     }
 
-    private void RolePlaying()
-    {
-        Physics2D.gravity = OriginalGravity;
-    }
+    //private void RoleUnPause() => LemonRIG.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+    private void RolePlaying() => Physics2D.gravity = windOn ? -OriginalGravity : OriginalGravity;
 
     public void WindOn()
     {
