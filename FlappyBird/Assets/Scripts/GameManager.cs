@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             case "Menu":
                 break;
             case "Playing":
-                if(game_Score == 10)
+                if(game_Score == 20)
                 {
                     SwitchState("End");
                     //Thanks for test
@@ -193,11 +193,6 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case "End":
-                //if (Input.GetKeyDown(KeyCode.R))
-                //{
-                //    SwitchState("ForEndoff");
-                //    SceneManager.LoadScene(0);
-                //}
                 break;
             default:
                 break;
@@ -288,6 +283,7 @@ public class GameManager : MonoBehaviour
         {
             case "Normal":
                 onPlayingNormalEvent?.Invoke();
+
                 break;
             case "WindOn":
                 onPlayingWindOnEvent?.Invoke();

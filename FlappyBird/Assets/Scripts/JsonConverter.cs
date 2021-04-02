@@ -52,7 +52,7 @@ public class JsonConverter : MonoBehaviour
 
     void writeout(string json_)
     {
-        string output_file = Application.streamingAssetsPath + "/Data/JsonOutput" + "/" + System.DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+        string output_file = Application.streamingAssetsPath + "/Data/JsonOutput" + "/" + System.DateTime.Now.ToString("yyyy-MM-dd") + $"_{keeper.PlayerID}" + ".json";
         File.WriteAllText(output_file, json_);
     }
 }

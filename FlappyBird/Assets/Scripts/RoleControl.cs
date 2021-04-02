@@ -20,7 +20,7 @@ public class RoleControl : MonoBehaviour
     UnityAction onplayingAction;
     UnityAction unplayingAction;
 
-    private bool is_scoring = false;
+    protected bool is_scoring = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,13 +32,12 @@ public class RoleControl : MonoBehaviour
         GameManager.Instance.onPlayingEvent.AddListener(onplayingAction);
         GameManager.Instance.offPlayingEvent.AddListener(unplayingAction);
 
-        GameManager.Instance.onMenuEvent.AddListener(RoleInMenuState);
+        //GameManager.Instance.onMenuEvent.AddListener(RoleInMenuState);
         GameManager.Instance.offMenuEvent.AddListener(RoleOutMenuState);
         GameManager.Instance.onPlayingEvent.AddListener(RolePlaying);
         GameManager.Instance.onPauseEvent.AddListener(RolePause);
         GameManager.Instance.onPlayingNormalEvent.AddListener(WindOff);
         GameManager.Instance.onPlayingWindOnEvent.AddListener(WindOn);
-
         GameManager.Instance.onEndEvent.AddListener(PlayerDie);
         GameManager.Instance.offEndEvent.AddListener(WindOff);
 

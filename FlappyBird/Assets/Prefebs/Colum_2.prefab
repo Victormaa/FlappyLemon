@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5851827060525211288}
   - component: {fileID: 5851827060525211295}
   m_Layer: 0
-  m_Name: Colum_Easy
+  m_Name: Colum_2
   m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,7 +146,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.3642969}
+  m_Offset: {x: 0, y: 1.2996885}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -157,7 +157,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.025, y: 0.79140615}
+  m_Size: {x: 2.025, y: 0.66218925}
   m_EdgeRadius: 0
 --- !u!61 &6983721563692142834
 BoxCollider2D:
@@ -281,7 +281,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.3430167}
+  m_Offset: {x: 0, y: 1.2830797}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -292,7 +292,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.025, y: 0.83396643}
+  m_Size: {x: 2.025, y: 0.7140927}
   m_EdgeRadius: 0
 --- !u!61 &517835674903532136
 BoxCollider2D:
@@ -526,7 +526,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.17757559, y: 0.9671768}
+  m_Offset: {x: -0.17757559, y: 1.0149059}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -537,5 +537,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.7945795, y: 2.2780669}
+  m_Size: {x: 5.7945795, y: 2.5056987}
   m_EdgeRadius: 0

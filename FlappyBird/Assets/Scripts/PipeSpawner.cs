@@ -29,7 +29,7 @@ public class PipeSpawner : MonoBehaviour
         if (Pipe_sum == 3)
             generateRate = 4.6f;
 
-        if ((Pipe_sum == 3 || Pipe_sum == 9) && checklevel)
+        if ((Pipe_sum == 5 || Pipe_sum == 15) && checklevel)
         {
             GameLevel += 1;
             checklevel = false;
@@ -45,7 +45,7 @@ public class PipeSpawner : MonoBehaviour
             newPipe.transform.position = transform.position + new Vector3(0, Random.Range(-Height, Height), 0);
             timer = 0;
             Pipe_sum += 1;
-            generateRate = Random.Range(1.85f, 3.2f);
+            generateRate = Random.Range(2.05f, 3.35f);
         }
         if (GameManager.Instance.isPlaying)
         {
