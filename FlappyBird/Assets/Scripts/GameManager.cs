@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Uduino;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +24,7 @@ public class GameManager : MonoBehaviour
             GameManager[] gameManagers = FindObjectsOfType(typeof(GameManager)) as GameManager[];
             if (gameManagers.Length == 0)
             {
-                Log.Warning("GameManager not present on the scene. Creating a new one.");
+                Debug.LogWarning("GameManager not present on the scene. Creating a new one.");
                 GameManager manager = new GameObject("GameManager").AddComponent<GameManager>();
                 _instance = manager;
                 return _instance;
@@ -41,7 +40,7 @@ public class GameManager : MonoBehaviour
                 _instance = value;
             else
             {
-                Log.Error("You can only use one UduinoManager. Destroying the new one attached to the GameObject " + value.gameObject.name);
+                Debug.LogError("You can only use one UduinoManager. Destroying the new one attached to the GameObject " + value.gameObject.name);
                 Destroy(value);
             }
         }
@@ -305,8 +304,6 @@ public class GameManager : MonoBehaviour
     }
 
     private void StateCheck(string State) => gameState_display.text = "Game State: " + State;
-
-    public void ArduinoSetOnNoDevice() => UduinoManager.Instance.autoReconnect = false;
 
     public void RestartScene()
     {
